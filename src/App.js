@@ -8,6 +8,24 @@ function App() {
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
   const [token, setToken] = useState("")
+  const [searchKey,setSearchKey] = useState("")
+  const [artists,setArtists]= useState([])
+
+
+  const searchArtists = async (e) => {
+    e.preventDefault()
+    const {data} = await axios.get("https://api.spotify.com/v1/search",
+    {headers:{
+      Authorization: `Bearer ${token}`
+    },
+    params:{
+      q: searchKey,
+      type: "artist"
+    }
+  })
+  console.log(data)
+  setArtists(data.artists.items)
+  }
 
   useEffect(()=>{
     const hash =window.location.hash
@@ -29,6 +47,14 @@ function App() {
     setToken("")
     window.localStorage.removeItem("token")
   }
+  const renderArtists = () => {
+    return artists.map(artist => (
+      <div key={artist.id}>
+        {artist.images.length ? <img width={"100%"} scr={artist.images[0].url} alt="image is not displaying!"/>:<div>No Images</div>}
+        {artist.name}
+      </div>
+  ))
+  }
   return (
     <div className="App">
       <header className="App-header">
@@ -36,6 +62,15 @@ function App() {
         {!token ?
         <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Login to Spotify</a>
         : <button onClick={logout}>Logout</button>}
+
+          {token?
+          <form onSubmit={searchArtists}>
+            <input type="text" onChange = {e => setSearchKey(e.target.value)}/>
+            <button type={"submit"}>Search</button>
+          </form>
+          :<h2>Please Login</h2>
+          }
+          {renderArtists()}
       </header>
     </div>
   );
