@@ -20,11 +20,12 @@ function App() {
     },
     params:{
       q: searchKey,
-      type: "artist"
+      type: "artists"
     }
   })
   console.log(data)
-  setArtists(data.artists.items)
+  // setArtists(data.artists.items)
+  setArtists(data.albums.items)
   }
 
   useEffect(()=>{
@@ -50,7 +51,8 @@ function App() {
   const renderArtists = () => {
     return artists.map(artist => (
       <div key={artist.id}>
-        {artist.images.length ? <img width={"100%"} scr={artist.images[0].url} alt="image is not displaying!"/>:<div>No Images</div>}
+        {console.log(artist.images.length)}
+        {artist.images.length>0 ? <img  src={artist.images[0].url} alt="image is not displaying!"/>:<div>No Images</div>}
         {artist.name}
       </div>
   ))
@@ -58,7 +60,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Spotify React</h1>
+        <h1><i>My Spotify React</i></h1>
         {!token ?
         <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Login to Spotify</a>
         : <button onClick={logout}>Logout</button>}
