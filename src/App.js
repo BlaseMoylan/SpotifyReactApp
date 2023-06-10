@@ -20,12 +20,12 @@ function App() {
     },
     params:{
       q: searchKey,
-      type: "artists"
+      type: "artist"
     }
   })
   console.log(data)
-  // setArtists(data.artists.items)
-  setArtists(data.albums.items)
+  setArtists(data.artists.items)
+  
   }
 
   useEffect(()=>{
